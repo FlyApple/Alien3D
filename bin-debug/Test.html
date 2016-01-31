@@ -46,13 +46,14 @@
             params.bgcolor = "#ffffff";
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
+            params.wmode = "direct";
             var attributes = {};
             attributes.id = "Test";
             attributes.name = "Test";
             attributes.align = "middle";
             swfobject.embedSWF(
                 "Test.swf", "flashContent", 
-                "100%", "100%", 
+                "100%", "100%", //"100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
