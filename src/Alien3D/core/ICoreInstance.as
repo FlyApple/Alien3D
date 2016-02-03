@@ -1,9 +1,7 @@
 package Alien3D.core
 {
-	import flash.events.EventDispatcher;
-
 	//
-	public class ICoreInstance extends EventDispatcher implements ICoreObject
+	public class ICoreInstance extends ICoreEventDispatcher
 	{		
 		private var _releaseInstance:Boolean;
 		private var _singletonInstance:SingletonT;
@@ -19,13 +17,19 @@ package Alien3D.core
 			this._singletonInstance	= singleton;
 		}
 		
-		//不需要重载
-		public function dispose() : void 
+		//
+		public override function dispose() : void 
 		{
 			if(!this._releaseInstance)
 			{ this.release(); }
 		}
 		
+		public override function initialize() : Boolean
+		{			
+			return true;
+		}
+		
+		//
 		public virtual function release() : void
 		{
 			//
@@ -33,11 +37,6 @@ package Alien3D.core
 			
 			//
 			this._releaseInstance = true;
-		}
-		
-		public virtual function initialize() : Boolean
-		{			
-			return true;
 		}
 	}
 }

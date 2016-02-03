@@ -2,9 +2,9 @@ package Alien3D.core
 {
 	public class BaseManager extends ICoreInstance
 	{
-		public function BaseManager()
+		public function BaseManager(singleton:SingletonT = null)
 		{
-			super();
+			super(singleton);
 		}
 		
 		public override function release() : void

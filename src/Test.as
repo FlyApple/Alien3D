@@ -11,7 +11,7 @@ package
 		
 		public function Test()
 		{
-			this._application = new Application(this);
+			this._application = new Application;
 			this._application.initialize();
 		}
 	}

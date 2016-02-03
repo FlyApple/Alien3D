@@ -1,10 +1,9 @@
 package Alien3D
 {
-	import flash.display.Sprite;
-	
 	import Alien3D.core.ICoreInstance;
 	import Alien3D.core.SingletonT;
 	import Alien3D.core.debug.DebugPrint;
+	import Alien3D.render.wrapper.Stage3DWrapperManager;
 
 	//
 	public class Application extends ICoreInstance
@@ -13,15 +12,14 @@ package Alien3D
 		public  static function get Singleton() : SingletonT { return ms_Singleton; }
 		
 		//
-		public var _sprite:Sprite;
+		private var _wrapperManager:Stage3DWrapperManager;
 		
 		//
-		public function Application(sprite:Sprite)
+		public function Application()
 		{
 			super(ms_Singleton = new SingletonT(this));
 			
 			//
-			this._sprite		= sprite;
 		}
 		
 		public override function release() : void
@@ -29,7 +27,7 @@ package Alien3D
 			//
 			
 			//
-			DebugPrint.output_application("finalize released");
+			DebugPrint.output_application("finalize released.");
 			
 			super.release();
 		}
@@ -40,7 +38,15 @@ package Alien3D
 			{ return false; }
 			
 			//
-			DebugPrint.output_application("finalize initialized");
+			this._wrapperManager = new Stage3DWrapperManager();
+			if(!this.initialize())
+			{
+				DebugPrint.output_application("[Stage3DWrapperManager] initialize fail.");
+				return false;
+			}
+			
+			//
+			DebugPrint.output_application("finalize initialized.");
 			return true;
 		}
 	}
