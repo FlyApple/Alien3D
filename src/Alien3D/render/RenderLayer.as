@@ -7,10 +7,8 @@ package Alien3D.render
 	//
 	public class RenderLayer extends ICoreEventDispatcher
 	{
-		protected var _stage:Stage;
-		
-		// override this method, after the initialization, it should be reset is true.
-		public virtual function get has_valid() : Boolean { return false; }
+		private var _stage:Stage;
+		public function get stage() : Stage { return this._stage; }
 		
 		//
 		public function RenderLayer(stage:Stage)

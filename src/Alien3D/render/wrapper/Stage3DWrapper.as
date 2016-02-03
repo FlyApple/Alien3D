@@ -25,15 +25,11 @@ package Alien3D.render.wrapper
 		
 		private var _backBufferWidth:int;
 		private var _backBufferHeight:int;
-		private var _antiAlias:int;
 		
 		public function get width() : int { return this._backBufferWidth; }
 		public function get height() : int { return this._backBufferHeight; }
 		public function set width(value:int) : void { this._backBufferWidth = value; }
 		public function set height(value:int) : void { this._backBufferHeight = value; }
-		
-		public function get anti_alias() : int { return this._antiAlias; }
-		public function set anti_alias(value:int) : void { this._antiAlias = value; }
 		
 		public function get driver_descrption() : String { return this._context3D == null ? "<driver error>": this._context3D.driverInfo; }
 		
@@ -74,7 +70,7 @@ package Alien3D.render.wrapper
 			// TODO Auto Generated method stub
 			if (this._context3D) 
 			{
-				this.dispatchEvent(new Stage3DEvent(Stage3DEvent.CONTEXT3D_DISPOSED));
+				this.dispatchEvent(new Stage3DWrapperEvent(Stage3DWrapperEvent.CONTEXT3D_DISPOSED));
 				this._context3D.dispose();
 			}
 			this._context3D = null;
@@ -96,17 +92,17 @@ package Alien3D.render.wrapper
 			//
 			if(this._backBufferWidth > 0 && this._backBufferHeight > 0)
 			{
-				this.configureBackBuffer(this._backBufferWidth, this._backBufferHeight, this._antiAlias == 0 ? 0 : this._antiAlias);
+				this.configureBackBuffer(this._backBufferWidth, this._backBufferHeight);
 			}
 			
 			//
-			this.dispatchEvent(new Stage3DEvent(Stage3DEvent.CONTEXT3D_CREATED));
+			this.dispatchEvent(new Stage3DWrapperEvent(Stage3DWrapperEvent.CONTEXT3D_CREATED));
 		}
 		
 		public function configureBackBuffer(width:int, height:int, antiAlias:int = 0) : void
 		{
 			if(this._context3D)
-			{ this._context3D.configureBackBuffer(width, height, this._antiAlias = antiAlias); }
+			{ this._context3D.configureBackBuffer(width, height, antiAlias); }
 		}
 		
 		public function clear(r:Number = 0.0, g:Number = 0.0, b:Number = 0.0, a:Number = 1.0) : void

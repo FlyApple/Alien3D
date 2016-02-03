@@ -1,6 +1,8 @@
 package Alien3D.render
 {
 	//
+	import flash.display.Stage;
+	
 	import Alien3D.core.BaseManager;
 	import Alien3D.core.SingletonT;
 
@@ -8,8 +10,8 @@ package Alien3D.render
 	public class RenderLayerManager extends BaseManager
 	{		
 		//
-		protected var _renderCount:Number;
-		protected var _renderLayers:Vector.<RenderLayer>;
+		protected var _count:Number;
+		protected var _layers:*;
 		
 		//
 		public function RenderLayerManager(singleton:SingletonT = null)
@@ -17,8 +19,52 @@ package Alien3D.render
 			super(singleton); 
 			
 			//
-			this._renderCount	= 0;
-			this._renderLayers	= null;
+			this._count		= 0;
+			this._layers	= new Vector.<RenderLayer>();
+		}
+		
+		//
+		public function createLayer(stage:Stage) : *
+		{
+			var layer:RenderLayer = new RenderLayer(stage);
+			if(this.addLayer(layer))
+			{ return layer; }
+			return null;
+		}
+		
+		//
+		public function deleteLayer(layer:*) : void
+		{
+			if(layer)
+			{
+				this.removeLayer(layer);
+				
+				layer.dispose();
+				layer = null;
+			}
+		}
+		
+		//
+		protected function addLayer(layer:*) : Boolean
+		{
+			this._layers.push(layer);
+			this._count ++;
+			return true;
+		}
+		
+		protected function removeLayer(layer:*) : Boolean
+		{
+			var index:int = this._layers.indexOf(layer);
+			if(index >= 0)
+			{
+				this._layers.splice(index, 1);
+				this._count --;
+			}
+			
+			if(this._count <= 0)
+			{ this._count = 0; }
+			
+			return true;
 		}
 	}
 }

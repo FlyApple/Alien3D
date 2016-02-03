@@ -3,6 +3,7 @@ package Alien3D
 	import Alien3D.core.ICoreInstance;
 	import Alien3D.core.SingletonT;
 	import Alien3D.core.debug.DebugPrint;
+	import Alien3D.render.RenderLayer3DManager;
 	import Alien3D.render.wrapper.Stage3DWrapperManager;
 
 	//
@@ -13,6 +14,7 @@ package Alien3D
 		
 		//
 		private var _wrapperManager:Stage3DWrapperManager;
+		private var _layerManager:RenderLayer3DManager;
 		
 		//
 		public function Application()
@@ -39,9 +41,17 @@ package Alien3D
 			
 			//
 			this._wrapperManager = new Stage3DWrapperManager();
-			if(!this.initialize())
+			if(!this._wrapperManager.initialize())
 			{
 				DebugPrint.output_application("[Stage3DWrapperManager] initialize fail.");
+				return false;
+			}
+			
+			//
+			this._layerManager = new RenderLayer3DManager();
+			if(!this._layerManager.initialize())
+			{
+				DebugPrint.output_application("[RenderLayer3DManager] initialize fail.");
 				return false;
 			}
 			

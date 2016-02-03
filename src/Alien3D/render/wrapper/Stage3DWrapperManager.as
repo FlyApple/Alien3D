@@ -24,13 +24,13 @@ package Alien3D.render.wrapper
 		}
 		
 		//
-		public function freeStage3DLayer(wrapper:Stage3DWrapper) : void
+		public function freeStage3DWrapper(wrapper:Stage3DWrapper) : void
 		{
 			var data:Stage3DWrapperData = this._wrapperData[wrapper.stage];
 			if(data)
 			{
 				var l:int = this._wrapperList.indexOf(wrapper);
-				this._wrapperList.splice(l, 1);
+				if(l >= 0){ this._wrapperList.splice(l, 1); }
 				
 				if(wrapper.index >= 0 && wrapper.index < data._count)
 				{
@@ -43,6 +43,9 @@ package Alien3D.render.wrapper
 					delete this._wrapperData[wrapper.stage];
 				}
 			}
+			
+			wrapper.dispose();
+			data = null;
 		}
 		
 		//
