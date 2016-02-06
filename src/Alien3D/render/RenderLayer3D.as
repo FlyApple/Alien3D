@@ -81,7 +81,29 @@ package Alien3D.render
 			this._wrapper.present();
 		}
 		
-		public function perspectiveFOVLHM(m:Matrix3D, aspect:Number = 0, fov:Number = 45, zNear:Number = 0.1, zFar:Number = 1000) : void 
+		//
+		public function orthoLHM(m:Matrix3D, width:Number, height:Number, zNear:Number = 0.1, zFar:Number = 1000) : void 
+		{
+			m.copyRawDataFrom(Vector.<Number>([
+				2.0/width, 0.0, 0.0, 0.0,
+				0.0, 2.0/height, 0.0, 0.0,
+				0.0, 0.0, 1.0/(zFar-zNear), 0.0,
+				0.0, 0.0, zNear/(zNear-zFar), 1.0
+			]));
+		}
+		
+		public function orthoRHM(m:Matrix3D, width:Number, height:Number, zNear:Number = 0.1, zFar:Number = 1000) : void 
+		{
+			m.copyRawDataFrom(Vector.<Number>([
+				2.0/width, 0.0, 0.0, 0.0,
+				0.0, 2.0/height, 0.0, 0.0,
+				0.0, 0.0, 1.0/(zNear-zFar), 0.0,
+				0.0, 0.0, zNear/(zNear-zFar), 1.0
+			]));
+		}
+		
+		//
+		public function perspectiveFOVLHM(m:Matrix3D, aspect:Number = 0, fov:Number = 45.0, zNear:Number = 0.1, zFar:Number = 1000) : void 
 		{
 			var yScale:Number = 1.0/Math.tan(fov * 0.5);
 			var xScale:Number = yScale / aspect; 
@@ -93,7 +115,7 @@ package Alien3D.render
 			]));
 		}
 		
-		public function perspectiveFOVRHM(m:Matrix3D, aspect:Number = 0, fov:Number = 45, zNear:Number = 0.1, zFar:Number = 1000) : void 
+		public function perspectiveFOVRHM(m:Matrix3D, aspect:Number = 0, fov:Number = 45.0, zNear:Number = 0.1, zFar:Number = 1000) : void 
 		{
 			var yScale:Number = 1.0/Math.tan(fov * 0.5);
 			var xScale:Number = yScale / aspect; 

@@ -1,11 +1,13 @@
 package Alien3D.view
 {
-	import flash.geom.Matrix3D;
-	
+	import Alien3D.Application;
+	import Alien3D.core.ICoreEvent;
+	import Alien3D.core.ProjectionParam;
 	import Alien3D.core.debug.DebugPrint;
 	import Alien3D.render.RenderLayer3D;
 	import Alien3D.render.RenderLayer3DManager;
 	import Alien3D.render.RenderLayerEvent;
+	import Alien3D.render.RenderSystem3D;
 
 	//
 	public class SingleLayerView3D extends BaseView3D
@@ -18,8 +20,11 @@ package Alien3D.view
 		public function set background_color(color:Array) : void 
 		{ this._backgroundColor = color.length > 3 ? color : [color[0], color[1], color[2], 1.0]; }
 		
-		private var _projectionMatrix:Matrix3D = new Matrix3D;
-		public function get pm () : Matrix3D { return this._projectionMatrix; }
+		private var _projectionParam:ProjectionParam = new ProjectionParam;
+		public function set projection_param(value:ProjectionParam) : void { this._projectionParam = value; }
+
+		//
+		private var _renderSystem:RenderSystem3D;
 		
 		//
 		public function SingleLayerView3D()
@@ -55,10 +60,14 @@ package Alien3D.view
 			DebugPrint.output_engine("render driver : " + this._layer.driver_descrption);
 			
 			//
-			this._layer.anti_alias = this.anti_alias;
+			this._layer.anti_alias 	= this.anti_alias;
+			
+			this._renderSystem		= new RenderSystem3D(this._layer);
+			
 			this.onResize();
 			
 			//
+			Application.PointerI.dispatchEvent(new ICoreEvent(ICoreEvent.RENDERSYSTEM_ACTIVE, this._renderSystem));
 			return true;
 		}
 		
@@ -69,8 +78,40 @@ package Alien3D.view
 			if(this._layer)
 			{ 
 				// 更新透視矩陣
-				this._projectionMatrix.identity();
-				this._layer.perspectiveFOVRHM(this._projectionMatrix, this.width / this.height, 45);
+				this._renderSystem.pm.identity();
+				switch(this._projectionParam.type)
+				{
+					case ProjectionParam.TYPE_ORTHO:
+					{
+						if(this._projectionParam.hand == ProjectionParam.HAND_LEFT)
+						{ 
+							this._layer.orthoLHM(this._renderSystem.pm, this.width, this.height,
+								this._projectionParam.near, this._projectionParam.far);  
+						}
+						else
+						{ 
+							this._layer.orthoRHM(this._renderSystem.pm, this.width, this.height,
+								this._projectionParam.near, this._projectionParam.far); 
+						}
+						break;
+					}
+					default:
+					{
+						if(this._projectionParam.hand == ProjectionParam.HAND_LEFT)
+						{ 
+							this._layer.perspectiveFOVLHM(this._renderSystem.pm, this.width / this.height, 
+								this._projectionParam.fov,
+								this._projectionParam.near, this._projectionParam.far);
+						}
+						else
+						{
+							this._layer.perspectiveFOVRHM(this._renderSystem.pm, this.width / this.height, 
+								this._projectionParam.fov,
+								this._projectionParam.near, this._projectionParam.far);		
+						}
+						break;
+					}
+				}
 				
 				//
 				this._layer.configureBackBuffer(this.width, this.height); 
