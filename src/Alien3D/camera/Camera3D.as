@@ -26,6 +26,7 @@ package Alien3D.camera
 		{
 			super(name, "Camera3D");
 			
+			this._lm	= new Matrix3D;
 			this._vm	= new Matrix3D;
 			this._pos	= new Vector3D;
 			this._rot	= new Vector3D;
@@ -160,7 +161,7 @@ package Alien3D.camera
 			this._vm.identity();
 			this._vm.copyFrom(this._lm);
 			
-			super.update();
+			super.update(rs);
 			this._vm.append(this.localMatrix);
 			
 			this._vm.appendTranslation(_pos.x, _pos.y, _pos.z);

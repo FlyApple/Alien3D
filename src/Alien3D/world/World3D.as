@@ -26,7 +26,7 @@ package Alien3D.world
 		
 		public override function update(rs:RenderSystem3D) : void
 		{
-			super.update();
+			super.update(rs);
 			
 			if(rs){ rs.wm = this.wm; }
 		}

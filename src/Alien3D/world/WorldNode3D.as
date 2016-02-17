@@ -111,12 +111,24 @@ package Alien3D.world
 		
 		public virtual function update(rs:RenderSystem3D) : void
 		{
-			
+			this.updateChild(rs);
 		}
 		
 		public virtual function render(rs:RenderSystem3D) : void
 		{
-			
+			this.renderChild(rs);
+		}
+		
+		private function updateChild(rs:RenderSystem3D) : void
+		{
+			for each(var child:WorldNode3D in this._children)
+			{ if(child){ child.update(rs); } }
+		}
+		
+		private function renderChild(rs:RenderSystem3D) : void
+		{
+			for each(var child:WorldNode3D in this._children)
+			{ if(child){ child.render(rs); } }
 		}
 	}
 }

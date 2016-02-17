@@ -2,8 +2,8 @@ package Alien3D.render
 {
 	import flash.geom.Matrix3D;
 	
-	import Alien3D.core.ns_core;
 	import Alien3D.core.ProjectionParam;
+	import Alien3D.core.ns_core;
 	import Alien3D.render.wrapper.Stage3DWrapper;
 
 	//
@@ -44,7 +44,7 @@ package Alien3D.render
 			this._vpm.append(this.pm);
 		}
 		
-		private var _wm:Matrix3D;
+		private var _wm:Matrix3D = new Matrix3D;
 		public function get wm() : Matrix3D { return this._wm; }
 		public function set wm (value:Matrix3D) : void 
 		{ 
@@ -56,9 +56,9 @@ package Alien3D.render
 			this._wvpm.append(this.vpm);
 		}
 		
-		private var _vpm:Matrix3D;
+		private var _vpm:Matrix3D = new Matrix3D;
 		public function get vpm() : Matrix3D { return this._vpm; }
-		private var _wvpm:Matrix3D;
+		private var _wvpm:Matrix3D= new Matrix3D;
 		public function get wvpm() : Matrix3D { return this._wvpm; }
 		
 		//
