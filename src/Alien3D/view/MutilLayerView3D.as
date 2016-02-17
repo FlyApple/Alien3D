@@ -26,14 +26,14 @@ package Alien3D.view
 		
 		protected virtual function onUpdateLayer(layer:RenderLayer3D) : void
 		{
-			this.updateFrame();
+			this.updateFrame(null);
 		}
 		
 		protected virtual function onRenderLayer(layer:RenderLayer3D) : void
 		{
 			layer.clearBackground(0.0, 0.0, 0.0, 1.0);
 			
-			this.renderFrame();
+			this.renderFrame(null);
 			
 			layer.present();
 		}

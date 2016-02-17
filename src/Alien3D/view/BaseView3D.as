@@ -2,6 +2,8 @@ package Alien3D.view
 {
 	import flash.events.Event;
 	
+	import Alien3D.render.RenderSystem3D;
+	
 	//
 	public class BaseView3D extends BaseView
 	{
@@ -46,12 +48,12 @@ package Alien3D.view
 		{
 		}
 		
-		public virtual function updateFrame() : void
+		public virtual function updateFrame(rs:RenderSystem3D) : void
 		{
 			
 		}
 		
-		public virtual function renderFrame() : void
+		public virtual function renderFrame(rs:RenderSystem3D) : void
 		{
 			
 		}

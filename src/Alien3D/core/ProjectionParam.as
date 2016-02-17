@@ -14,5 +14,9 @@ package Alien3D.core
 		public var fov:Number	= 45.0;
 		public var near:Number	= 0.1;
 		public var far:Number	= 1000.0;
+		
+		// 不是必須的.內部會覆蓋掉
+		ns_core var width:Number	= 640;
+		ns_core var height:Number	= 480;
 	}
 }

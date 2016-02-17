@@ -4,6 +4,7 @@ package Alien3D.view
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import Alien3D.core.ICoreObject;
 
@@ -18,6 +19,7 @@ package Alien3D.view
 		public override function set width(w:Number) : void { this._viewWidth = w; }
 		public override function set height(h:Number) : void { this._viewHeight = h; }
 		
+		//
 		public function BaseView()
 		{
 			super();
@@ -58,6 +60,16 @@ package Alien3D.view
 			this._viewHeight	= this.stage.stageHeight;
 			
 			//
+			this.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, function (e:MouseEvent) : void {
+				//移除右鍵菜單
+				onRMouseUp();
+			});
+			this.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, function (e:MouseEvent) : void {
+				//移除右鍵菜單
+				onRMouseDown();
+			});
+			
+			//
 			this.finalizeInitialize();
 		}
 		
@@ -71,6 +83,18 @@ package Alien3D.view
 			//
 			this._viewWidth		= this.stage.stageWidth;
 			this._viewHeight	= this.stage.stageHeight;
+		}
+		
+		protected virtual function onRMouseUp() : void
+		{
+			// TODO Auto-generated method stub
+			
+		}
+		
+		protected virtual function onRMouseDown() : void
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

@@ -1,13 +1,18 @@
 package Alien3D.view
 {
 	import Alien3D.Application;
+	
 	import Alien3D.core.ICoreEvent;
 	import Alien3D.core.ProjectionParam;
+	import Alien3D.core.ns_core;
 	import Alien3D.core.debug.DebugPrint;
+	
 	import Alien3D.render.RenderLayer3D;
 	import Alien3D.render.RenderLayer3DManager;
 	import Alien3D.render.RenderLayerEvent;
 	import Alien3D.render.RenderSystem3D;
+	
+	import Alien3D.world.World3D;
 
 	//
 	public class SingleLayerView3D extends BaseView3D
@@ -25,6 +30,13 @@ package Alien3D.view
 
 		//
 		private var _renderSystem:RenderSystem3D;
+		
+		//
+		private var _world:World3D
+		public  function set world(value:World3D) : void
+		{
+			this._world		= value;
+		}
 		
 		//
 		public function SingleLayerView3D()
@@ -75,45 +87,15 @@ package Alien3D.view
 		{
 			super.onResize();
 			
+			if(this._renderSystem)
+			{
+				this._projectionParam.ns_core::width	= this.width;
+				this._projectionParam.ns_core::height	= this.height;
+				this._renderSystem.pp = this._projectionParam; //賦值並更新矩陣
+			}
+			
 			if(this._layer)
-			{ 
-				// 更新透視矩陣
-				this._renderSystem.pm.identity();
-				switch(this._projectionParam.type)
-				{
-					case ProjectionParam.TYPE_ORTHO:
-					{
-						if(this._projectionParam.hand == ProjectionParam.HAND_LEFT)
-						{ 
-							this._layer.orthoLHM(this._renderSystem.pm, this.width, this.height,
-								this._projectionParam.near, this._projectionParam.far);  
-						}
-						else
-						{ 
-							this._layer.orthoRHM(this._renderSystem.pm, this.width, this.height,
-								this._projectionParam.near, this._projectionParam.far); 
-						}
-						break;
-					}
-					default:
-					{
-						if(this._projectionParam.hand == ProjectionParam.HAND_LEFT)
-						{ 
-							this._layer.perspectiveFOVLHM(this._renderSystem.pm, this.width / this.height, 
-								this._projectionParam.fov,
-								this._projectionParam.near, this._projectionParam.far);
-						}
-						else
-						{
-							this._layer.perspectiveFOVRHM(this._renderSystem.pm, this.width / this.height, 
-								this._projectionParam.fov,
-								this._projectionParam.near, this._projectionParam.far);		
-						}
-						break;
-					}
-				}
-				
-				//
+			{ 				
 				this._layer.configureBackBuffer(this.width, this.height); 
 			}
 		}
@@ -129,7 +111,7 @@ package Alien3D.view
 		
 		protected virtual function onUpdateLayer(layer:RenderLayer3D) : void
 		{
-			this.updateFrame();
+			this.updateFrame(this._renderSystem);
 		}
 		
 		protected virtual function onRenderLayer(layer:RenderLayer3D) : void
@@ -137,9 +119,25 @@ package Alien3D.view
 			layer.clearBackground(this._backgroundColor[0], this._backgroundColor[1], 
 				this._backgroundColor[2], this._backgroundColor[3]);
 			
-			this.renderFrame();
+			this.renderFrame(this._renderSystem);
 			
 			layer.present();
+		}
+		
+		public override function updateFrame(rs:RenderSystem3D) : void
+		{
+			if(this._world)
+			{
+				this._world.update(rs);
+			}
+		}
+		
+		public override function renderFrame(rs:RenderSystem3D) : void
+		{
+			if(this._world)
+			{
+				this._world.render(rs);
+			}
 		}
 	}
 }
