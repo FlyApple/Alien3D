@@ -24,6 +24,7 @@ package Alien3D.loader.misc
 		
 		private var 	_readBytes:Number;
 		private var 	_totalBytes:Number;
+		public function get length() : Number { return this._totalBytes; }
 		
 		public function loadingRatio() : Number { return (this._readBytes / this._totalBytes); }
 		private var 	_loading:Boolean;
@@ -40,26 +41,38 @@ package Alien3D.loader.misc
 		public function get dataFormat() : String { return this._dataFormat; }
 		protected var	_data:*;
 		public function get data() : * { return this._data; }
+		protected var	_param:*;
+		public function get param() : * { return this._param; }
 		
-		public function SingleFileLoader()
+		private var 	_request:URLRequest;
+		
+		
+		public function SingleFileLoader(file:String)
 		{
 			super();
-		}
-		
-		public function load(file:String, format:String = URLLoaderDataFormat.TEXT) : Boolean
-		{
+			
+			//
 			file		= file.replace(/\\/g, "/");
 			
 			//
-			var request:URLRequest 	= new URLRequest(file);
-			this._url		= request.url;
+			this._request 	= new URLRequest(file);
+			this._url		= this._request.url;
 			this._dir		= _url.substring(0, _url.lastIndexOf("/") + 1);
 			this._name		= _url.substring(_url.lastIndexOf("/") + 1);
-			this._ext		= _url.substring(_url.lastIndexOf(".") + 1);
+			this._ext		= _url.substring(_url.lastIndexOf(".") + 1);	
 			
 			//
-			this._dataFormat= format;
-			return this.loadURL(request);
+			this._param		= null;
+		}
+		
+		public function load(format:String = URLLoaderDataFormat.TEXT, param:* = null) : Boolean
+		{
+			if(format == null || format.length == 0){ return false; }
+			
+			//
+			this._param			= param;
+			this._dataFormat 	= format;
+			return this.loadURL(this._request);
 		}
 		
 		private function loadURL(request:URLRequest) : Boolean
@@ -75,7 +88,7 @@ package Alien3D.loader.misc
 			//
 			var loader:URLLoader 	= new URLLoader;
 			loader.dataFormat		= this._dataFormat;
-			loader.addEventListener(Event.COMPLETE, function (event:SecurityErrorEvent) : void
+			loader.addEventListener(Event.COMPLETE, function (event:Event) : void
 			{
 				this.handleCompleted(URLLoader(event.currentTarget));
 			});
