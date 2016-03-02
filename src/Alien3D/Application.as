@@ -10,6 +10,7 @@ package Alien3D
 	import Alien3D.core.ICoreInstance;
 	import Alien3D.core.SingletonT;
 	import Alien3D.core.debug.DebugPrint;
+	import Alien3D.loader.ExtendParserTypes;
 	import Alien3D.render.RenderLayer3DManager;
 	import Alien3D.render.RenderSystem3D;
 	import Alien3D.render.wrapper.Stage3DWrapperManager;
@@ -28,6 +29,7 @@ package Alien3D
 		//
 		private var _wrapperManager:Stage3DWrapperManager;
 		private var _layerManager:RenderLayer3DManager;
+		private var _extendParserTypes:ExtendParserTypes;
 		
 		// 僅僅用與資源加載時使用,並不參與其它部分
 		private var _renderSystemActive:RenderSystem3D;
@@ -89,6 +91,14 @@ package Alien3D
 			{
 				DebugPrint.output_application("[RenderLayer3DManager] initialize fail.");
 				return false;
+			}
+			
+			//
+			this._extendParserTypes = new ExtendParserTypes();
+			if(!this._extendParserTypes.initialize())
+			{
+				DebugPrint.output_application("[ExtendParserTypes] initialize fail.");
+				return false;		
 			}
 			
 			//
