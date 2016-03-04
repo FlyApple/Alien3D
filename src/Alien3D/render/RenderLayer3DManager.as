@@ -9,7 +9,7 @@ package Alien3D.render
 		private static var ms_Singleton:SingletonT;
 		public  static function get Singleton() : SingletonT { return ms_Singleton; }
 		
-		public function RenderLayer3DManager(singleton:SingletonT = null)
+		public function RenderLayer3DManager()
 		{
 			super(ms_Singleton = new SingletonT(this));
 			

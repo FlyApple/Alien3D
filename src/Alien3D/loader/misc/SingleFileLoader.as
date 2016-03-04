@@ -52,10 +52,7 @@ package Alien3D.loader.misc
 			super();
 			
 			//
-			file		= file.replace(/\\/g, "/");
-			
-			//
-			this._request 	= new URLRequest(file);
+			this._request 	= new URLRequest(file.replace(/\\/g, "/").toLowerCase());
 			this._url		= this._request.url;
 			this._dir		= _url.substring(0, _url.lastIndexOf("/") + 1);
 			this._name		= _url.substring(_url.lastIndexOf("/") + 1);

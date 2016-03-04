@@ -17,6 +17,8 @@ package Alien3D.loader.misc
 		public   function get name() : String { return this._name; }
 		ns_loader function set name(value:String) : void { this._name = value; }
 		
+		public function get url() : String { return this._url; }
+		
 		public function ResourceData()
 		{
 			super();

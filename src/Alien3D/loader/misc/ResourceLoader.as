@@ -8,6 +8,7 @@ package Alien3D.loader.misc
 	import Alien3D.core.ICoreEventDispatcher;
 	import Alien3D.core.debug.DebugPrint;
 	import Alien3D.loader.ExtendParserTypes;
+	import Alien3D.loader.ResourceGroup;
 	import Alien3D.loader.ns_loader;
 	import Alien3D.loader.parser.base.ParserBase;
 	import Alien3D.loader.parser.base.ParserDataFormat;
@@ -16,9 +17,74 @@ package Alien3D.loader.misc
 	//
 	public class ResourceLoader extends ICoreEventDispatcher
 	{
-		public function ResourceLoader()
+		private var _group:ResourceGroup;
+		private var _queueList:Vector.<ResourceQueueData>; //仅仅队列中是主资源
+		
+		private var _loading:Boolean;
+		private var _loadingList:Vector.<ResourceQueueData>; //加载队列中包括主资源和附属资源
+		
+		//
+		public function ResourceLoader(group:ResourceGroup)
 		{
 			super();
+			
+			//
+			this._group			= group;
+			this._queueList		= new Vector.<ResourceQueueData>();
+			this._loadingList	= new Vector.<ResourceQueueData>();
+		}
+		
+		public function load(url:String, complateListener:Function = null) : Boolean
+		{
+			var queue:ResourceQueueData = new ResourceQueueData;
+			queue.url		= url;
+			queue.listener	= complateListener;
+			
+			this._queueList.push(queue);
+			return next();
+		}
+		
+		private function next() : Boolean
+		{
+			if(this._queueList.length == 0){ return false; }
+			if(this._loading == true){ return false; }
+			
+			this.callback();
+			return true;
+		}
+		
+		private function pop(queue:ResourceQueueData) : Boolean
+		{
+			if(!queue){ return false; }
+			
+			var index:int = this._queueList.indexOf(queue);
+			if(index >= 0){ this._queueList.splice(index, 1); }
+			
+			return next();
+		}
+		
+		private function callback() : void
+		{
+			this._loading	= true;
+			
+			//
+			var queue:ResourceQueueData = this._queueList[0];
+			if(queue != null)
+			{
+				this._loadingList.push(queue);
+				if(!this.onLoad(queue.url, queue._parent))
+				{
+					//
+					var index:int = this._loadingList.indexOf(queue);
+					if(index >= 0){ this._loadingList.splice(index, 1); }
+					
+					this.pop(queue);
+					
+					//
+					DebugPrint.output_load("[ResourceLoader] <callback> load error:" + queue.url);
+					return ;
+				}
+			}
 		}
 		
 		private function onLoad(file:String, parent:ResourceDependency = null) : Boolean
@@ -46,7 +112,7 @@ package Alien3D.loader.misc
 			data._url					= loader.url;
 			data._parser				= parser;
 			data.ns_loader::name		= loader.name;
-			if(data.initialize())
+			if(!data.initialize())
 			{
 				return false;
 			}
