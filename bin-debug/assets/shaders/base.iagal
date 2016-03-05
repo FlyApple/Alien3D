@@ -1,0 +1,45 @@
+;注释单行为‘;’ ,'//';
+;注释多行为'/*'开始,'*/'结束;
+;'{}'中为特定的片段,必须匹配出现;
+;字符串值为‘’之间,也可以不使用,如果字符串中间有空格或退格键,必须使用;
+
+[shader_0]
+;着色名称
+name = alpha
+;顶点着色
+vs =
+{
+	m44 op, va0, (wvpm)
+	mov v0, va1
+}
+;片段着色
+fs =
+{
+	tex ft1, v0, fs2 <2d,repeat,linear,nomip>
+	tex ft0, v0, fs0 <2d,repeat,linear,nomip>
+	mul ft0.w, ft0.w, v0.z
+	mul oc, ft0, (color)
+}
+
+[shader_1]
+;着色名称
+name = emissive_color
+;顶点着色
+vs =
+{
+	m44 op, va0, (wvpm)
+	mov v0, va2
+	
+	// lightmap
+	mov v1.xyz, va1.xyz
+	mov v1.w, (0)
+}
+;片段着色
+fs =
+{
+	tex ft1, v1.xy, fs2 <2d,repeat,linear,nomip>
+	tex ft0, v0, fs0 <2d,repeat,linear,nomip>
+	mul ft0, ft0, (color)
+	mov ft0.w, ft0.x
+	mov oc, ft0
+}

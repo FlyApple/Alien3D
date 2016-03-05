@@ -7,6 +7,7 @@ package
 	import Alien3D.camera.Camera3D;
 	import Alien3D.camera.Camera3DController;
 	import Alien3D.core.ProjectionParam;
+	import Alien3D.loader.ResourceManager;
 	import Alien3D.view.SingleLayerView3D;
 	import Alien3D.view.View3DEvent;
 	import Alien3D.world.World3D;
@@ -47,6 +48,9 @@ package
 			this._world.addChild(this._camera);
 			
 			this._view.world= this._world;
+			
+			ResourceManager.PointerI.load("assets/shaders/base.xagal", function () : void {
+			});
 		}
 	}
 }

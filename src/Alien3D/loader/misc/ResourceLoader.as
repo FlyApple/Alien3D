@@ -91,20 +91,16 @@ package Alien3D.loader.misc
 		{
 			//
 			var loader:SingleFileLoader = new SingleFileLoader(file);
+			var format:String			= URLLoaderDataFormat.BINARY;
 			var parser:ParserBase 		= this.createParserFromSuffix(loader.ext);
-			if(!parser)
+			if(parser)
 			{
-				DebugPrint.output_load("[ResourceLoader] not find parser:" + loader.url);
-				return false; 
-			}
-			
-			//
-			var format:String			= null;
-			switch(parser.dataFormat)
-			{
-				case ParserDataFormat.PLAIN_TEXT:{ format = URLLoaderDataFormat.TEXT; break; }
-				case ParserDataFormat.BINARY:{ format = URLLoaderDataFormat.BINARY; break; }
-				default: { format = URLLoaderDataFormat.TEXT; break; }
+				switch(parser.dataFormat)
+				{
+					case ParserDataFormat.PLAIN_TEXT:{ format = URLLoaderDataFormat.TEXT; break; }
+					case ParserDataFormat.BINARY:{ format = URLLoaderDataFormat.BINARY; break; }
+					default: { format = URLLoaderDataFormat.BINARY; break; }
+				}
 			}
 			
 			//
@@ -112,16 +108,11 @@ package Alien3D.loader.misc
 			data._url					= loader.url;
 			data._parser				= parser;
 			data.ns_loader::name		= loader.name;
-			if(!data.initialize())
-			{
-				return false;
-			}
 			
 			//
 			loader.addEventListener(Event.COMPLETE, handleLoaderComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, handleLoaderError);
 			
-			//
 			if(!loader.load(format, data))
 			{ 
 				DebugPrint.output_load("[ResourceLoader] loader fail:" + loader.url);
@@ -151,12 +142,9 @@ package Alien3D.loader.misc
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, handleLoaderError);
 			loader.removeEventListener(Event.COMPLETE, handleLoaderComplete);
 			
-			//
-			var data:ResourceData = loader.param as ResourceData;
-			data._error		= true;
-			data._length	= 0;
-			
-			this.onLoaderError(data, null, loader.hasError() ? loader.errorMessage() : "<Unknow> loading error.");
+			//			
+			this.onLoaderError(loader.param, loader.data, 
+				loader.hasError() ? loader.errorMessage() : "Unknow: loading error.");
 		}
 		
 		private function handleLoaderComplete(event:Event) : void
@@ -170,24 +158,20 @@ package Alien3D.loader.misc
 			var data:ResourceData = loader.param as ResourceData;
 			if(loader.hasCompleted())
 			{ 
-				data._error		= false;
-				data._length	= loader.length;
-				
 				this.onLoaderComplete(data, loader.data); 
 			}
 			else
-			{ 
-				data._error		= true;
-				data._length	= 0;
-				
-				this.onLoaderError(data, null, loader.hasError() ? loader.errorMessage() : "<Unknow> loading error."); 
+			{ 			
+				this.onLoaderError(loader.param, loader.data, 
+					loader.hasError() ? loader.errorMessage() : "Unknow: loading error.");
 			}
 		}
 		
-		protected function onLoaderError(data:ResourceData, bytes:*, error:String) : void
+		protected function onLoaderError(data:ResourceData, bytes:*, error:String = null) : void
 		{
+			DebugPrint.output_load("[ResourceLoader] loader error:" + data.url + " " + error);
+			
 			//
-			this.initParser(data, bytes);
 		}
 		
 		protected function onLoaderComplete(data:ResourceData, bytes:*) : void
